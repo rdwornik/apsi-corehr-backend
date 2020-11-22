@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'corehr',
     'corehr_api',
     'users',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',
+    'django.contrib.admindocs'
 ]
 
 MIDDLEWARE = [
@@ -168,7 +170,7 @@ REST_FRAMEWORK = {
 #IsAuthenticatedOrReadOnly
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -193,4 +195,9 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
 }
