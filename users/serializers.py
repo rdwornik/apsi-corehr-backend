@@ -1,13 +1,14 @@
 from rest_framework import serializers
 from users.models import Employee
 
+
 class RegisterEmployeeSerializer(serializers.ModelSerializer):
     '''
         Responsible for serializing
     '''
     class Meta:
         model = Employee
-        fields = ('email','name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password')
+        fields = ('id','email','name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password')
         extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):
@@ -20,3 +21,10 @@ class RegisterEmployeeSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+class PasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

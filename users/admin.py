@@ -78,7 +78,7 @@ class EmployeeAdmin(BaseUserAdmin):
             'fields': ('email', 'name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password1', 'password2'),
         }),
     )
-    search_fields = ('epail', 'name', 'surname', 'phone_number', 'birthdate',)
+    search_fields = ('email', 'name', 'surname', 'phone_number', 'birthdate',)
     ordering = ('email', 'name', 'surname', 'phone_number', 'birthdate', 'pesel')
     filter_horizontal = ()
 
