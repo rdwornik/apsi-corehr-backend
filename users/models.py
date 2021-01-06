@@ -49,6 +49,9 @@ class MyEmployeeManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
+
+
 class Employee(AbstractBaseUser, PermissionsMixin):
     """The most imprortant model in the aplication. It stores the user data."""
 
@@ -60,6 +63,8 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(_("Phone Number"), max_length=17, validators=[phone_regex])
     birthdate = models.DateField(_("Date"), auto_now=False, auto_now_add=False)
 
+    job_position = models.ForeignKey("corehr.JobPosition", verbose_name=_("Job Position"), on_delete=models.CASCADE, default=1)
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -70,7 +75,12 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         """Unicode representation of Employee."""
-        return "{} {} {} {}".format(self.name, self.surname, self.email, self.birthdate)
+        return "{0} {1} {2} {3} {4} {5}".format(self.name,
+                                                        self.surname,
+                                                        self.email,
+                                                        self.pesel,
+                                                        self.phone_number,
+                                                        self.birthdate)
     
     def has_perm(self, perm, obj=None):
         """
@@ -87,6 +97,7 @@ class Employee(AbstractBaseUser, PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
 
     @property
     def is_staff(self):

@@ -7,18 +7,33 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.serializers import RegisterEmployeeSerializer
+from users.serializers import EmployeeSerializer
 # Create your views here.
 from users import models, serializers
 from django.shortcuts import get_object_or_404
+from rest_framework import filters
+
+
+#TODO Filtery
+#TODO zmiana hasła
+#TODO CRUD DO POZYCJI DO KlUCZY
+#TODO ADMIN zarejestruj te inne modele 
+#Permission
+#Szur->nie widzy innych szurów, Manager -> widzi szury + wyszukiwanie, Admin
+
+#Stanowiska dodaje admin
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = models.Employee.objects.all()
-    serializer_class = serializers.RegisterEmployeeSerializer
+    serializer_class = serializers.EmployeeSerializer
     permission_classes = [AllowAny]
+    # filter_backends = [filters.SearchFilter]
+    filterset_fields = ('id', )
 
     def list(self, request):
-        serializer = self.serializer_class(self.queryset, many=True)
+        queryset = models.Employee.objects.all()
+        serializer = self.serializer_class(self.filter_queryset(self.get_queryset()), many=True, context={"request": request})
+
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
@@ -50,8 +65,16 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+    def filter_queryset(self, queryset):
+        # Other condition for different filter backend goes here
+        print("hello")
+        for backend in list(self.filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, view=self)
+        return queryset
 
     # @detail_route(methods=['post'])
     # def set_password(self, request, pk=None):
@@ -65,18 +88,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     #         return Response(serializer.errors,
     #                         status=status.HTTP_400_BAD_REQUEST)
 
-    
-class EmployeeUserCreate(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request, format='json'):
-        serializer = RegisterEmployeeSerializer(data=request.data)
-        if serializer.is_valid():
-            newuser = serializer.save()
-            if newuser:
-                json = serializer.data
-                return Response(json, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class BlacklistTokenUpdateView(APIView):
     permission_classes = [AllowAny]

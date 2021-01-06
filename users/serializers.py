@@ -2,14 +2,14 @@ from rest_framework import serializers
 from users.models import Employee
 
 
-class RegisterEmployeeSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     '''
         Responsible for serializing
     '''
     class Meta:
         model = Employee
         fields = ('id','email','name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        # extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):
         """

@@ -18,7 +18,7 @@ class EmployeeCreationForm(forms.ModelForm):
         """Meta definition for EmployeeCreationform."""
 
         model = Employee
-        fields = ('email','name', 'surname', 'phone_number', 'birthdate','pesel')
+        fields = ('email','name', 'surname', 'phone_number', 'birthdate','pesel',)
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -81,6 +81,9 @@ class EmployeeAdmin(BaseUserAdmin):
     search_fields = ('email', 'name', 'surname', 'phone_number', 'birthdate',)
     ordering = ('email', 'name', 'surname', 'phone_number', 'birthdate', 'pesel')
     filter_horizontal = ()
+
+
+
 
 # Now register the new UserAdmin...
 admin.site.register(Employee, EmployeeAdmin)

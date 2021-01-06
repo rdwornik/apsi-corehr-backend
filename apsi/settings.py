@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'users',
     'rest_framework_simplejwt.token_blacklist',
     'django_extensions',
-    'django.contrib.admindocs'
+    'django.contrib.admindocs',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -155,10 +156,10 @@ REST_FRAMEWORK = {
             'rest_framework.permissions.IsAuthenticatedOrReadOnly'
 
         ),
-    # 'DEFAULT_FILTER_BACKENDS':
-    #     (   'django_filters.rest_framework.DjangoFilterBackend',
+    'DEFAULT_FILTER_BACKENDS':
+        (   'django_filters.rest_framework.DjangoFilterBackend',
         
-    #     ),
+        ),
     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100
 }
@@ -201,3 +202,5 @@ GRAPH_MODELS = {
   'all_applications': True,
   'group_models': True,
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
