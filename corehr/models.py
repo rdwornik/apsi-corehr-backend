@@ -94,16 +94,17 @@ class Contract(models.Model):
     date_from = models.DateField(_("Date from"), auto_now=False, auto_now_add=False)
     date_to = models.DateField(_("Date to"), auto_now=False, auto_now_add=False)
     base_rate = models.DecimalField(_("Base rate"), max_digits=9, decimal_places=2)
-    post_code_regex = RegexValidator(
-        regex=r'^(^[0-9]{2}(?:-[0-9]{3})?$)?$)',
-        message=_(u'Must be valid zipcode in formats 12345 or 12-345'),
-    )
-    post_code = models.CharField(_("Post code"), max_length=9, validators=[post_code_regex])
-    file_name = models.FileField(_("File"), upload_to=None, max_length=100)
+    # post_code_regex = RegexValidator(
+    #     regex=r'^(^[0-9]{2}(?:-[0-9]{3})?$)?$)',
+    #     message=_(u'Must be valid zipcode in formats 12345 or 12-345'),
+    # )
+    post_code = models.CharField(_("Post code"), max_length=9)
+    # file_name = models.FileField(_("File"), upload_to=None, max_length=100)
+    file_name = models.CharField(_("File"), max_length=256)
 
-    job_position = models.ForeignKey("corehr.JobPosition", verbose_name=_(""), on_delete=models.CASCADE)
-    contract_type = models.ForeignKey("corehr.ContractType", verbose_name=_(""), on_delete=models.CASCADE)
-    department = models.ForeignKey("corehr.Department", verbose_name=_(""), on_delete=models.CASCADE)
+    job_position = models.ForeignKey("corehr.JobPosition", verbose_name=_("Job Position"), on_delete=models.CASCADE)
+    contract_type = models.ForeignKey("corehr.ContractType", verbose_name=_("Contract Type"), on_delete=models.CASCADE)
+    department = models.ForeignKey("corehr.Department", verbose_name=_("Department"), on_delete=models.CASCADE)
 
     class Meta:
         """Meta definition for Contract."""
@@ -122,12 +123,13 @@ class Contract(models.Model):
 
     def __str__(self):
         """Unicode representation of Contract."""
-        return "{0} {1} {2} {3} {4} {5} {6} {7}".format(self.name, 
+        return "{0} {1} {2} {3} {4} {5} {6} {7}".format( 
                                                         self.date_from, 
                                                         self.date_to, 
                                                         self.base_rate, 
-                                                        self.post_code, 
-                                                        self.job_postion,
+                                                        self.post_code,
+                                                        self.file_name, 
+                                                        self.job_position,
                                                         self.contract_type,
                                                         self.department )
 

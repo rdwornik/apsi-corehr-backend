@@ -38,6 +38,7 @@ path('api/corehr/', include(corehr_router.urls)),
 path('api/users/', include(users_router.urls)),
 path('api-auth/', include('rest_framework.urls')),
 path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+path('api/token/verify/', users_views.VerifyUser.as_view()),
 path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 path('admin/doc/', include('django.contrib.admindocs.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

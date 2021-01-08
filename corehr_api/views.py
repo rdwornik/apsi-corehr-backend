@@ -61,7 +61,7 @@ class OrganizationMembershipViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
     def filter_queryset(self, queryset):
         # Other condition for different filter backend goes here
@@ -109,7 +109,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
     def filter_queryset(self, queryset):
         # Other condition for different filter backend goes here
@@ -156,7 +156,7 @@ class ManagersViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
     def filter_queryset(self, queryset):
         # Other condition for different filter backend goes here

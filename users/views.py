@@ -6,14 +6,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.conf import settings
 from users.serializers import EmployeeSerializer
 # Create your views here.
 from users import models, serializers
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
-
-
+from rest_framework import generics
+import jwt
 #TODO Filtery
 #TODO zmiana hasła
 #TODO CRUD DO POZYCJI DO KlUCZY
@@ -66,7 +66,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         return self.update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
 
     def filter_queryset(self, queryset):
@@ -75,18 +75,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         for backend in list(self.filter_backends):
             queryset = backend().filter_queryset(self.request, queryset, view=self)
         return queryset
-
-    # @detail_route(methods=['post'])
-    # def set_password(self, request, pk=None):
-    #     user = self.get_object()
-    #     serializer = serializers.PasswordSerializer(data=request.DATA)
-    #     if serializer.is_valid():
-    #         user.set_password(serializer.data['password'])
-    #         user.save()
-    #         return Response({'status': 'password set'})
-    #     else:
-    #         return Response(serializer.errors,
-    #                         status=status.HTTP_400_BAD_REQUEST)
 
 
 class BlacklistTokenUpdateView(APIView):
@@ -101,3 +89,25 @@ class BlacklistTokenUpdateView(APIView):
             return Response('logout',status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyUser(generics.GenericAPIView):
+    queryset = models.Employee.objects.all()
+
+    def get(self, request):
+        token = request.GET.get('token')
+        print('payload ' + str(settings.SECRET_KEY))
+        try:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+            print('payload 1 ' + str(payload))
+            user = models.Employee.objects.get(id=payload['user_id'])
+            if not user.is_active:
+                user.is_active = True
+                user.save()
+            serializer = serializers.EmployeeSerializer(user)
+            json = JSONRenderer().render(serializer.data)    
+            return Response(user, status=status.HTTP_200_OK)
+        except jwt.ExpiredSignatureError as e:
+            return Response({'error': 'Activations link expired'}, status=status.HTTP_400_BAD_REQUEST)
+        except jwt.exceptions.DecodeError as e:
+            return Response({'error': 'Invalid Token'}, status=status.HTTP_400_BAD_REQUEST)

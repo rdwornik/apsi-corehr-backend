@@ -114,15 +114,6 @@ class ContractTypeSerializer(serializers.ModelSerializer):
         model = corehr_models.ContractType
         fields = '__all__'
 
-    
-class ContractSerializer(serializers.ModelSerializer):
-    '''
-        Responsible for serializing Contract
-    '''
-    class Meta:
-        model = corehr_models.Contract
-        fields = '__all__'
-
 class DepartmentSerializer(serializers.ModelSerializer):
     '''
         Responsible for serializing Department
@@ -130,6 +121,64 @@ class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = corehr_models.Department
         fields = '__all__'
+
+
+class JobPositionFieldSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        serializer = JobPositionSerializer(value)
+        json = JSONRenderer().render(serializer.data)
+        return json
+    def to_internal_value(self, data):
+        return get_object_or_404(corehr_models.JobPosition, pk=data)
+    class Meta:
+        model = corehr_models.JobPosition
+
+class ContractTypeFieldSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        serializer = ContractTypeSerializer(value)
+        json = JSONRenderer().render(serializer.data)
+        return json
+    def to_internal_value(self, data):
+        return get_object_or_404(corehr_models.ContractType, pk=data)
+    class Meta:
+        model = corehr_models.ContractType
+
+class DepartmentFieldSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        serializer = DepartmentSerializer(value)
+        json = JSONRenderer().render(serializer.data)
+        return json
+    def to_internal_value(self, data):
+        return get_object_or_404(corehr_models.Department, pk=data)
+    class Meta:
+        model = corehr_models.Department
+
+class ContractSerializer(serializers.ModelSerializer):
+    '''
+        Responsible for serializing Contract
+    '''
+    job_position= JobPositionFieldSerializer(queryset=corehr_models.JobPosition.objects.all())
+    contract_type = ContractTypeFieldSerializer(queryset=corehr_models.ContractType.objects.all())
+    department = DepartmentFieldSerializer(queryset=corehr_models.Department.objects.all())
+    
+    class Meta:
+        model = corehr_models.Contract
+        fields = '__all__'
+    
+    def create(self, validated_data):
+        job_position_id = validated_data.pop('job_position')
+        job_position_instance = get_object_or_404(corehr_models.JobPosition, pk=job_position_id.pk)
+
+        contract_type_id = validated_data.pop('contract_type')
+        contract_type_instance = get_object_or_404(corehr_models.ContractType, pk=contract_type_id.pk)
+
+        department_id = validated_data.pop('department')
+        department_instance = get_object_or_404(corehr_models.Department, pk=department_id.pk)
+
+        return corehr_models.Contract.objects.create(   job_position=job_position_instance,
+                                                        contract_type=contract_type_instance,
+                                                        department=department_instance,
+                                                        **validated_data)
 
 class AbsenceSerializer(serializers.ModelSerializer):
     '''
