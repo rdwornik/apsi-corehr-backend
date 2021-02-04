@@ -8,7 +8,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = Employee
-        fields = ('id','email','name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password')
+        fields = ('id','email','name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password','is_staff')
         # extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):

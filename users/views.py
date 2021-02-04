@@ -20,6 +20,8 @@ import jwt
 #TODO ADMIN zarejestruj te inne modele 
 #Permission
 #Szur->nie widzy innych szurów, Manager -> widzi szury + wyszukiwanie, Admin
+from rest_framework_simplejwt.backends import TokenBackend
+from django.core.exceptions import ValidationError
 
 #Stanowiska dodaje admin
 
@@ -95,19 +97,27 @@ class VerifyUser(generics.GenericAPIView):
     queryset = models.Employee.objects.all()
 
     def get(self, request):
-        token = request.GET.get('token')
-        print('payload ' + str(settings.SECRET_KEY))
+        # token = request.GET.get('token')
+        # print('payload ' + str(settings.SECRET_KEY))
+        # try:
+        #     payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+        #     print('payload 1 ' + str(payload))
+        #     user = models.Employee.objects.get(id=payload['user_id'])
+        #     if not user.is_active:
+        #         user.is_active = True
+        #         user.save()
+        #     serializer = serializers.EmployeeSerializer(user)
+        #     json = JSONRenderer().render(serializer.data)    
+        #     return Response(user, status=status.HTTP_200_OK)
+        # except jwt.ExpiredSignatureError as e:
+        #     return Response({'error': 'Activations link expired'}, status=status.HTTP_400_BAD_REQUEST)
+        # except jwt.exceptions.DecodeError as e:
+        #     return Response({'error': 'Invalid Token'}, status=status.HTTP_400_BAD_REQUEST)
+        token = request.META.get('HTTP_AUTHORIZATION', " ").split(' ')[1]
+        data = {'token': token}
         try:
-            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
-            print('payload 1 ' + str(payload))
-            user = models.Employee.objects.get(id=payload['user_id'])
-            if not user.is_active:
-                user.is_active = True
-                user.save()
-            serializer = serializers.EmployeeSerializer(user)
-            json = JSONRenderer().render(serializer.data)    
-            return Response(user, status=status.HTTP_200_OK)
-        except jwt.ExpiredSignatureError as e:
-            return Response({'error': 'Activations link expired'}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.exceptions.DecodeError as e:
-            return Response({'error': 'Invalid Token'}, status=status.HTTP_400_BAD_REQUEST)
+            valid_data = TokenBackend(algorithm='HS256').decode(token,verify=False)
+            user = valid_data['user']
+            request.user = user
+        except ValidationError as v:
+            print("validation error", v)

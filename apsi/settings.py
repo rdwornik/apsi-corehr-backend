@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'corehr',
     'corehr_api',
     'users',
@@ -153,6 +154,7 @@ REST_FRAMEWORK = {
         (   'rest_framework.authentication.SessionAuthentication',
             'rest_framework.authentication.BasicAuthentication',
             'rest_framework_simplejwt.authentication.JWTAuthentication',
+            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         ),
     'DEFAULT_PERMISSION_CLASSES':
         (   'rest_framework.permissions.DjangoModelPermissions',
@@ -173,6 +175,12 @@ REST_FRAMEWORK = {
 #IsAuthenticated
 #IsAdminUser
 #IsAuthenticatedOrReadOnly
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': timedelta(hours=1),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+}
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
@@ -217,3 +225,10 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    # TODO - set this properly for production
+    'https://40.114.107.163',
+    'https://40.114.107.163',
+)
