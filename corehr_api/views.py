@@ -13,15 +13,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters
 
 
-#TODO Filtery
-#TODO zmiana hasła
-#TODO CRUD DO POZYCJI DO KlUCZY
-#TODO ADMIN zarejestruj te inne modele 
-#Permission
-#Szur->nie widzy innych szurów, Manager -> widzi szury + wyszukiwanie, Admin
-
-#Stanowiska dodaje admin
 class OrganizationMembershipViewSet(viewsets.ModelViewSet):
+    r"""
+    Class EmployeeViewSet is responsible for handling the REST API request to the server
+    """
+
     queryset = models.OrganizationMembership.objects.all()
     serializer_class = serializers.OrganizationMembershipSerializer
     permission_classes = [AllowAny]
@@ -70,6 +66,9 @@ class OrganizationMembershipViewSet(viewsets.ModelViewSet):
         return queryset
 
 class OrganizationViewSet(viewsets.ModelViewSet):
+    r"""
+    Class OrganizationViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.Organization.objects.all()
     serializer_class = serializers.OrganizationSerializer
     permission_classes = [AllowAny]
@@ -117,6 +116,9 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             queryset = backend().filter_queryset(self.request, self.get_queryset(), view=self)
         return queryset
 class ManagersViewSet(viewsets.ModelViewSet):
+    r"""
+    Class ManagersViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.Managers.objects.all()
     serializer_class = serializers.ManagersSerializer
     permission_classes = [AllowAny]
@@ -165,6 +167,9 @@ class ManagersViewSet(viewsets.ModelViewSet):
         return queryset
 
 class JobPositionViewSet(viewsets.ModelViewSet):
+    r"""
+    Class JobPositionViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.JobPosition.objects.all()
     serializer_class = serializers.JobPositionSerializer
     permission_classes = [AllowAny]
@@ -213,6 +218,9 @@ class JobPositionViewSet(viewsets.ModelViewSet):
         return queryset
 
 class ContractTypeViewSet(viewsets.ModelViewSet):
+    r"""
+    Class ContractTypeViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.ContractType.objects.all()
     serializer_class = serializers.ContractTypeSerializer
     permission_classes = [AllowAny]
@@ -261,6 +269,9 @@ class ContractTypeViewSet(viewsets.ModelViewSet):
         return queryset
 
 class ContractViewSet(viewsets.ModelViewSet):
+    r"""
+    Class ContractViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.Contract.objects.all()
     serializer_class = serializers.ContractSerializer
     permission_classes = [AllowAny]
@@ -308,6 +319,9 @@ class ContractViewSet(viewsets.ModelViewSet):
             queryset = backend().filter_queryset(self.request, self.get_queryset(), view=self)
         return queryset
 class DepartmentViewSet(viewsets.ModelViewSet):
+    r"""
+    Class DepartmentViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
     permission_classes = [AllowAny]
@@ -356,6 +370,9 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         return queryset
 
 class AbsenceViewSet(viewsets.ModelViewSet):
+    r"""
+    Class AbsenceViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.Absence.objects.all()
     serializer_class = serializers.AbsenceSerializer
     permission_classes = [AllowAny]
@@ -404,6 +421,9 @@ class AbsenceViewSet(viewsets.ModelViewSet):
         return queryset
 
 class AbsenceTypeViewSet(viewsets.ModelViewSet):
+    r"""
+    Class AbsenceTypeViewSet is responsible for handling the REST API request to the server
+    """
     queryset = models.AbsenceType.objects.all()
     serializer_class = serializers.AbsenceTypeSerializer
     permission_classes = [AllowAny]

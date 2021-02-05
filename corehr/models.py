@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 class OrganizationMembership(models.Model):
     """Model definition for OrganizationMembership."""
 
-    # TODO: Define fields here
     member_employee = models.ForeignKey("users.Employee", verbose_name=_("Employee"), on_delete=models.CASCADE,related_name='member_employee')
     organization = models.ForeignKey("corehr.Organization", verbose_name=_("Organization"), on_delete=models.CASCADE,related_name='organization')
 
@@ -27,7 +26,6 @@ class OrganizationMembership(models.Model):
 class Organization(models.Model):
     """Model definition for Organization."""
 
-    # TODO: Define fields here
     name = models.CharField(_("Organization"), max_length=256, default="None", unique=True)
 
     class Meta:
@@ -41,13 +39,12 @@ class Organization(models.Model):
         return "{0}".format(self.name)
 
 
-
 class Managers(models.Model):
     """Model definition for Managers."""
 
-    # TODO: Define fields here
     manager = models.ForeignKey("users.Employee", verbose_name=_("Manager"), on_delete=models.CASCADE,related_name='manager')
     employee = models.ForeignKey("users.Employee", verbose_name=_("Employee"), on_delete=models.CASCADE,related_name='employee')
+    
     class Meta:
         """Meta definition for Managers."""
 
@@ -63,6 +60,7 @@ class Managers(models.Model):
 class JobPosition(models.Model):
     """Model definition for JobPosition."""
     name = models.CharField(_("Job Position"), max_length=256, default="None", unique=True)
+    
     class Meta:
         """Meta definition for JobPosition."""
 
@@ -94,12 +92,7 @@ class Contract(models.Model):
     date_from = models.DateField(_("Date from"), auto_now=False, auto_now_add=False)
     date_to = models.DateField(_("Date to"), auto_now=False, auto_now_add=False)
     base_rate = models.DecimalField(_("Base rate"), max_digits=9, decimal_places=2)
-    # post_code_regex = RegexValidator(
-    #     regex=r'^(^[0-9]{2}(?:-[0-9]{3})?$)?$)',
-    #     message=_(u'Must be valid zipcode in formats 12345 or 12-345'),
-    # )
     post_code = models.CharField(_("Post code"), max_length=9)
-    # file_name = models.FileField(_("File"), upload_to=None, max_length=100)
     file_name = models.CharField(_("File"), max_length=256)
 
     job_position = models.ForeignKey("corehr.JobPosition", verbose_name=_("Job Position"), on_delete=models.CASCADE)

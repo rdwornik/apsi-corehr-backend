@@ -12,21 +12,23 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-
+import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+with open(os.path.join(BASE_DIR, 'secrets.json')) as secrets_file:
+    secrets = json.load(secrets_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'a(0%2^_o7mjwdbshv-3e9c*$816mo!_156*n9529f)$f5(*_kj'
+SECRET_KEY = secrets['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['40.114.107.163']
+ALLOWED_HOSTS = [secrets['IP']]
 
 
 # Application definition
@@ -93,9 +95,9 @@ WSGI_APPLICATION = 'apsi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'apsi',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': secrets['DB_NAME'],
+        'USER': secrets['DB_USER'],
+        'PASSWORD': secrets['DB_PASSWORD'],
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -170,11 +172,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100
 }
 
-#Permissions:
-#AllowAny
-#IsAuthenticated
-#IsAdminUser
-#IsAuthenticatedOrReadOnly
 
 JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
@@ -228,7 +225,5 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    # TODO - set this properly for production
-    'https://40.114.107.163',
-    'https://40.114.107.163',
+    secrets['HOST'],
 )

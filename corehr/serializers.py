@@ -7,14 +7,18 @@ from django.forms.models import model_to_dict
 from rest_framework.renderers import JSONRenderer
 
 class OrganizationSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing Organization
-    '''
+    """
     class Meta:
         model = corehr_models.Organization
         fields = '__all__'
 
 class MemberEmployeeFieldSerializer(serializers.RelatedField):
+    """
+        Responsible for handling custiomized field responsible for serializing the MemberEmployee object
+    """
+
     def to_representation(self, value):
         serializer = users_serializers.EmployeeSerializer(value)
         json = JSONRenderer().render(serializer.data)
@@ -35,9 +39,9 @@ class OrganizationFieldSerializer(serializers.RelatedField):
         model = corehr_models.Organization
 
 class OrganizationMembershipSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing OrganizationMembership
-    '''
+    """
     member_employee = MemberEmployeeFieldSerializer(queryset=users_models.Employee.objects.all())
     organization = OrganizationFieldSerializer(queryset=corehr_models.Organization.objects.all())
 
@@ -56,6 +60,10 @@ class OrganizationMembershipSerializer(serializers.ModelSerializer):
         
 
 class ManagerFieldSerializer(serializers.RelatedField):
+    """
+        Responsible for handling custiomized field responsible for serializing the Manager object
+    """
+
     def to_representation(self, value):
         serializer = users_serializers.EmployeeSerializer(value)
         json = JSONRenderer().render(serializer.data)
@@ -77,9 +85,9 @@ class EmployeeFieldSerializer(serializers.RelatedField):
         model = users_models.Employee
 
 class ManagersSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing Managers
-    '''
+    """
     manager = ManagerFieldSerializer(queryset=users_models.Employee.objects.all())
     employee = EmployeeFieldSerializer(queryset=users_models.Employee.objects.all())
 
@@ -98,32 +106,36 @@ class ManagersSerializer(serializers.ModelSerializer):
 
 #SŁOWNIK EASY
 class JobPositionSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing JobPosition
-    '''
+    """
     class Meta:
         model = corehr_models.JobPosition
         fields = '__all__'
 
 #SŁOWNIK EAS
 class ContractTypeSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing ContractType
-    '''
+    """
     class Meta:
         model = corehr_models.ContractType
         fields = '__all__'
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing Department
-    '''
+    """
     class Meta:
         model = corehr_models.Department
         fields = '__all__'
 
 
 class JobPositionFieldSerializer(serializers.RelatedField):
+    """
+        Responsible for handling custiomized field responsible for serializing the JobPosition object
+    """
+
     def to_representation(self, value):
         serializer = JobPositionSerializer(value)
         json = JSONRenderer().render(serializer.data)
@@ -144,6 +156,10 @@ class ContractTypeFieldSerializer(serializers.RelatedField):
         model = corehr_models.ContractType
 
 class DepartmentFieldSerializer(serializers.RelatedField):
+    """
+        Responsible for handling custiomized field responsible for serializing the Department object
+    """
+
     def to_representation(self, value):
         serializer = DepartmentSerializer(value)
         json = JSONRenderer().render(serializer.data)
@@ -154,9 +170,9 @@ class DepartmentFieldSerializer(serializers.RelatedField):
         model = corehr_models.Department
 
 class ContractSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing Contract
-    '''
+    """
     job_position= JobPositionFieldSerializer(queryset=corehr_models.JobPosition.objects.all())
     contract_type = ContractTypeFieldSerializer(queryset=corehr_models.ContractType.objects.all())
     department = DepartmentFieldSerializer(queryset=corehr_models.Department.objects.all())
@@ -181,17 +197,17 @@ class ContractSerializer(serializers.ModelSerializer):
                                                         **validated_data)
 
 class AbsenceSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing Absence
-    '''
+    """
     class Meta:
         model = corehr_models.Absence
         fields = '__all__'
 
 class AbsenceTypeSerializer(serializers.ModelSerializer):
-    '''
+    """
         Responsible for serializing AbsenceType
-    '''
+    """
     class Meta:
         model = corehr_models.AbsenceType
         fields = '__all__'

@@ -6,14 +6,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 class MyEmployeeManager(BaseUserManager):
     """
-    Employee manager needed
+    EmployeeManager class inherites from BaseUserManager class in order to add some customization.
     """
     def create_user(self, name, surname, email, birthdate, phone_number, password=None, pesel=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.        
         """
-        #create user here
+
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -51,7 +51,6 @@ class MyEmployeeManager(BaseUserManager):
 
 
 
-
 class Employee(AbstractBaseUser, PermissionsMixin):
     """The most imprortant model in the aplication. It stores the user data."""
 
@@ -86,21 +85,15 @@ class Employee(AbstractBaseUser, PermissionsMixin):
         """
         Method needed to create Abstact User
         """
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
         return True
     
     def has_module_perms(self, app_label):
         """
         Method uneed to create Abstarct User
         """
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
         return True
 
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
         return self.is_admin

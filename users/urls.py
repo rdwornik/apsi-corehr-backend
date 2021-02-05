@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import EmployeeUserCreate, BlacklistTokenUpdateView, EmployeeViewSet
+from .views import  BlacklistTokenUpdateView, EmployeeViewSet
 
 app_name = 'users'
 
@@ -13,7 +13,6 @@ employee_detail = EmployeeViewSet.as_view({
     'patch': 'partial_update',
     'delete': 'destroy'
 })
-
 
 urlpatterns = [
     path('employees/', employee_list, name='employee-list'),

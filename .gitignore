@@ -11,7 +11,8 @@ media
 
 # If you are using PyCharm # 
 
-
+docs
+docs/*
 # Python # 
 *.py[cod] 
 *$py.class 
@@ -221,3 +222,4 @@ GitHub.sublime-settings
 !.vscode/extensions.json 
 .history
 model.png
+*.png

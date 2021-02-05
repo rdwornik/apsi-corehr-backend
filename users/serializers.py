@@ -3,17 +3,16 @@ from users.models import Employee
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    '''
-        Responsible for serializing
-    '''
+    r"""
+        Responsible for serializing the Employee model to JSON  format.
+    """
     class Meta:
         model = Employee
         fields = ('id','email','name', 'surname', 'phone_number', 'birthdate', 'pesel', 'password','is_staff')
-        # extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):
-        """
-        docstring
+        r"""
+        This method is responsible for creating the instance of employee from the data JSON format file.
         """
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)

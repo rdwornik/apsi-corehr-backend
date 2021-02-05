@@ -16,7 +16,7 @@ from django.conf.urls import include, url
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_jwt.views import refresh_jwt_token
 from rest_framework_jwt.views import verify_jwt_token
-
+from users.views import BlacklistTokenUpdateView
 
 users_router = DefaultRouter()
 users_router.register(r'employees', users_views.EmployeeViewSet)
@@ -33,25 +33,19 @@ corehr_router.register(r'absence', corehr_api_views.AbsenceViewSet)
 corehr_router.register(r'absencetype', corehr_api_views.AbsenceTypeViewSet)
 
 root = SimpleRouter
-
+	
 urlpatterns = [
+path('admin/doc/', include('django.contrib.admindocs.urls')),
 path('admin/', admin.site.urls),
 path('', include('corehr.urls', namespace='corehr')),
-# path('api/', include('corehr_api.urls', namespace='corehr_api')),
 path('api/corehr/', include(corehr_router.urls)),
-# path('api/user/', include('users.urls', namespace='users')),
 path('api/users/', include(users_router.urls)),
 path('api-auth/', include('rest_framework.urls')),
 path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 path('api/token/verify/', users_views.VerifyUser.as_view()),
-path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-url(r'^api/v1/auth/verify_token/', verify_jwt_token),
-url(r'^api/v1/auth/obtain_token/', obtain_jwt_token),
-url(r'^api/v1/auth/refresh_token/', refresh_jwt_token),    
-# url(r'^api-token-verify/', verify_jwt_token),
-# url(r'^api-token-refresh/', refresh_jwt_token),
-# The rest of the endpoints
-path('admin/doc/', include('django.contrib.admindocs.urls'))
+path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),    
+path('api/users/logout/blacklist/', BlacklistTokenUpdateView.as_view(),
+         name='blacklist')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

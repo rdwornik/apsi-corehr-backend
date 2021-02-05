@@ -9,19 +9,19 @@ from users.models import Employee
 # Register your models here.
 
 class EmployeeCreationForm(forms.ModelForm):
-    """Form definition for EmployeeCreation."""
+    """The EmployeeCreationForm class is responsible for generating the form for creating an Employee in the administrator view"""
 
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
     
     class Meta:
-        """Meta definition for EmployeeCreationform."""
+        """Metadata for the EmployeeCreationForm class"""
 
         model = Employee
         fields = ('email','name', 'surname', 'phone_number', 'birthdate','pesel',)
 
     def clean_password2(self):
-        # Check that the two password entries match
+        """ Check that the two password entries match"""
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -29,7 +29,7 @@ class EmployeeCreationForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        # Save the provided password in hashed format
+        """Save the provided password in hashed format"""
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
@@ -37,7 +37,7 @@ class EmployeeCreationForm(forms.ModelForm):
         return user
 
 class EmployeeChangeForm(forms.ModelForm):
-    """Form definition for EmployeeChange."""
+    """The EmployeeChangeForm class is responsible for generating the form for editing in the administrator panel"""
     password = ReadOnlyPasswordHashField()
 
     class Meta:
@@ -48,20 +48,27 @@ class EmployeeChangeForm(forms.ModelForm):
         'is_active', 'is_admin')
 
     def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
+        """ Regardless of what the user provides, return the initial value.
+        This is done here, rather than on the field, because the
+         field does not have access to the initial value"""
         return self.initial["password"]
 
 
 class EmployeeAdmin(BaseUserAdmin):
-    # The forms to add and change user instances
+    """
+    The EmployeeAdmin class is a class representing Procownik in the admin panel
+    """
+    
+    """ The forms to add and change user instances
+    """
     form = EmployeeChangeForm
     add_form = EmployeeCreationForm
 
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
+    """The fields to be used in displaying the User model.
+    hese override the definitions on the base UserAdmin
+     that reference specific fields on auth.User.
+     """
+
     list_display = ('email', 'name', 'surname', 'phone_number', 'birthdate', 'pesel'
     , 'is_admin')
     list_filter = ('is_admin',)
@@ -70,8 +77,11 @@ class EmployeeAdmin(BaseUserAdmin):
         ('Personal info', {'fields': ('name', 'surname', 'phone_number', 'birthdate', 'pesel')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
+    
+    """ add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
+    overrides get_fieldsets to use this attribute when creating a user.
+    """
+    
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
